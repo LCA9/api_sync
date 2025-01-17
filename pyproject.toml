@@ -1,0 +1,42 @@
+[project]
+name = "api-zero"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi[standard]>=0.115.6",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.9.2",
+    "taskipy>=1.14.1",
+]
+
+
+[tool.ruff]
+exclude=['migration']
+line-length = 79
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[tool.taskipy.tasks]
+run = 'fastapi dev codigos/app.py'
+lint = 'ruff check codigos/app.py && ruff check codigos/app.py --diff'
+format = 'ruff check codigos/app.py --fix && ruff format codigos/app.py'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=codigos -vv'
+post_test = 'coverage html'
